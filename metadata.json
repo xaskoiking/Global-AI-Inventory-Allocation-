@@ -1,0 +1,9 @@
+
+{
+  "name": "Gaia: AI Smart-Grid for Food Recovery & Safe Logistics",
+  "description": "A safety-first logistics platform connecting food surplus with demand using Gemini 3 reasoning, automated food safety protocols, and strategic cost distribution.",
+  "requestFramePermissions": [
+    "geolocation",
+    "camera"
+  ]
+}
