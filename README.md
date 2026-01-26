@@ -73,12 +73,24 @@ graph TD
 
 ---
 
-## 🧠 Technical Execution
-*   **Autonomous Logistics Engine (Thinking Mode):** Executes high-dimensional reasoning to solve complex routing problems.
-*   **CVLP Vision Protocol:** Utilizes **Contrastive Vision-Language Pre-training** for automated food identification and spatial volume estimation.
-*   **Secretless Security:** Leverages **Cloud IAM Workload Identity** on Google Cloud Run, authenticating via Service Account identity rather than static API keys.
+## 💎 Gemini 3 Implementation: Core Features
+Gaia 3.0 is built on the cutting edge of generative AI, utilizing the full suite of Gemini 3 capabilities:
+
+### 1. 👁️ Multimodal Inventory Scan (Flash Vision)
+*   **The Feature:** Users can upload or snap a photo of any food surplus. 
+*   **Action:** Gemini 3 Flash analyzes the image to identify specific dishes, estimate portion volumes, and predict shelf-life based on visual freshness markers. It transforms a raw photo into actionable grid data.
+
+### 2. 🗺️ Infrastructure Grounding (Tool Use)
+*   **The Feature:** Discovery of real-world community resources.
+*   **Action:** Using **Google Maps Grounding**, the AI "looks up" nearby verified food banks, shelters, and community kitchens directly within the mapping interface, ensuring logistics are anchored in reality.
+
+### 3. 🤔 Autonomous Dispatch (Thinking Mode)
+*   **The Feature:** High-dimensional logistics reasoning.
+*   **Action:** **Gemini 3 Pro** executes deep logical reasoning to solve complex routing problems. It balances multiple supply and demand nodes simultaneously, accounting for urban traffic, perishability hierarchy, and humanitarian priority to generate optimized dispatch plans.
 
 ---
+
+## 🛠️ Engineering Log: Challenges & Solutions
 
 ## 🚀 Getting Started
 
@@ -105,5 +117,24 @@ gcloud run deploy gaia-smart-grid \
   --allow-unauthenticated \
   --set-env-vars GOOGLE_AI_KEY=YOUR_GEMINI_API_KEY
 ```
+
+---
+
+## 🛠️ Engineering Log: Challenges & Solutions
+*A living record of the technical hurdles overcome during the Gaia 3.0 build.*
+
+### 1. The "Secretless" Security Barrier
+*   **Challenge:** We needed to use powerful AI models in a public app without exposing our private Gemini API keys in the user's browser.
+*   **Solution:** Built a **Secure AI Proxy** using Express.js. This architecture acts as a "Digital Security Vault"—the browser talks only to our server, and our server safely talks to Google using an environment-based key.
+
+### 2. The Model Availability Puzzle
+*   **Challenge:** During production testing, the latest "Gemini 3 Preview" models were returning **404 Not Found** errors in specific regions.
+*   **Solution:** Transitioned the backend logic from Vertex AI Identity auth to the **Stable `@google/genai` logic**. This provided a unified way to handle both "Flash" and "Pro" models with 100% reliability across all environments.
+
+### 3. The "Formal Envelope" Mismatch
+*   **Challenge:** The production AI server was rejecting requests with a **400 Bad Request** error because it required a very strict nested data structure (Roles and Parts) that differred from our local testing setup.
+*   **Solution:** Rewrote the communication bridge in `server.js` and `geminiService.ts` to strictly follow the **Professional Content Schema**. We ensured every image and text prompt is now "packaged" perfectly before being sent to the AI.
+
+---
 
 **Public URL:** [Gaia 3.0 Live Environment](https://gaia-smart-grid-507647380467.us-central1.run.app)
