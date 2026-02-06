@@ -17,8 +17,9 @@ flowchart LR
     A[<b>1. Scan Surplus</b><br/>User uploads photo] --> B[<b>2. AI Metadata</b><br/>Gemini identifies food,<br/>servings & shelf-life]
     B --> C[<b>3. Grid Injection</b><br/>Human verifies data &<br/>publishes to Map]
     C --> D[<b>4. Discovery</b><br/>AI Grounding finds<br/>nearby NGO hubs]
-    D --> E[<b>5. AI Dispatch</b><br/>Reasoning engine solves<br/>optimized logistics]
-    E --> F[<b>6. Impact</b><br/>Secure delivery &<br/>carbon offset logged]
+    D --> E[<b>5. Grid Injection</b><br/>Active Registration<br/>of Hubs onto Map]
+    E --> F[<b>6. AI Dispatch</b><br/>Reasoning engine solves<br/>optimized logistics]
+    F --> G[<b>7. Impact</b><br/>Secure delivery &<br/>carbon offset logged]
     
     style A fill:#e0f2fe,stroke:#0369a1
     style E fill:#e0f2fe,stroke:#0369a1
@@ -30,8 +31,8 @@ flowchart LR
 *   **Multimodal Scan:** Use the **AI Vision Scanner** to capture food surplus photos. Gemini 3 Flash automatically extracts specific dish names, estimates portion volume, and predicts shelf-life.
 *   **Verification:** Refine AI-generated metadata manually to ensure 100% data accuracy before publishing to the grid.
 
-### 🔹 2. Infrastructure Discovery & Matching
 *   **Infrastructure Grounding:** Use the **Discover Local Hubs** tool to connect with real-world NGO data (Food Banks/Shelters) anchored via Google Maps.
+*   **Active Map Registration:** Instantly register discovered hubs directly onto the GAIA Map with one click. The system extracts precise coordinates (lat/lng) so the new nodes can immediately participate in the smart-grid.
 *   **Grid Optimization:** Once nodes are established, trigger the **Execute AI Dispatch**. The thinking-mode reasoning engine calculates the most efficient routing pairs based on perishability and humanitarian urgency.
 
 ### 🔹 3. Secure Verification & Logistics
@@ -80,9 +81,9 @@ Gaia 3.0 is built on the cutting edge of generative AI, utilizing the full suite
 *   **The Feature:** Users can upload or snap a photo of any food surplus. 
 *   **Action:** Gemini 3 Flash analyzes the image to identify specific dishes, estimate portion volumes, and predict shelf-life based on visual freshness markers. It transforms a raw photo into actionable grid data.
 
-### 2. 🗺️ Infrastructure Grounding (Tool Use)
-*   **The Feature:** Discovery of real-world community resources.
-*   **Action:** Using **Google Maps Grounding**, the AI "looks up" nearby verified food banks, shelters, and community kitchens directly within the mapping interface, ensuring logistics are anchored in reality.
+### 2. 🗺️ Geospatial Hub Grounding (Tool Use + Structured Data)
+*   **The Feature:** Discovery and active registration of real-world community resources.
+*   **Action:** Using **Google Maps Grounding**, the AI identifies verified food banks and shelters. Crucially, it generates **structured geospatial JSON** (coordinates, descriptions, websites) allowing users to register these hubs onto the live map as active demand nodes.
 
 ### 3. 🤔 Autonomous Dispatch (Thinking Mode)
 *   **The Feature:** High-dimensional logistics reasoning.

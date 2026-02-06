@@ -39,21 +39,19 @@ app.post('/api/ai', async (req, res) => {
             throw new Error('Invalid request: "parts" must be an array.');
         }
 
-        const model = genAI.models.get({
+        // Correct method for @google/genai package
+        const result = await genAI.models.generateContent({
             model: modelName,
+            contents: parts,
             config: config
         });
 
-        // Pack parts into the standard request format
-        const result = await model.generateContent({
-            contents: [{ role: 'user', parts: parts }]
+        // Return full result to support grounding and other metadata
+        res.json({
+            text: result.text || "",
+            groundingMetadata: result.candidates?.[0]?.groundingMetadata,
+            candidates: result.candidates
         });
-
-        if (!result.text) {
-            throw new Error('AI returned an empty response.');
-        }
-
-        res.json({ text: result.text });
     } catch (error) {
         console.error('AI Proxy Error:', error.message);
         res.status(500).json({

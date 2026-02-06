@@ -267,6 +267,22 @@ const App: React.FC = () => {
     }
   };
 
+  const registerHub = (hub: any) => {
+    const newNode: LocationData = {
+      id: 'H' + Date.now(),
+      name: hub.name,
+      lat: hub.lat,
+      lng: hub.lng,
+      type: 'demand',
+      foodType: FoodType.CANNED, // Default for NGOs
+      quantity: 100, // Initial capacity expectation
+      urgency: 'medium',
+      managedBy: 'GAIA Discovery Protocol'
+    };
+    setLocations(prev => [...prev, newNode]);
+    setNearbyResults(prev => prev.filter(h => h.name !== hub.name));
+  };
+
   const MapEvents = () => {
     useMapEvents({
       async click(e) {
@@ -473,12 +489,23 @@ const App: React.FC = () => {
                       {isDiscovering ? <Loader2 size={12} className="animate-spin" /> : <Globe size={12} />} Discover Local Hubs
                     </button>
                     {nearbyResults.length > 0 && (
-                      <div className="space-y-1 pt-1">
-                        {nearbyResults.map((c, i) => c.maps && (
-                          <a key={i} href={c.maps.uri} target="_blank" className="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl group hover:bg-indigo-50 transition-colors">
-                            <span className="text-[9px] font-bold text-slate-700 uppercase truncate">{c.maps.title}</span>
-                            <ExternalLink size={10} className="text-slate-400 group-hover:text-indigo-600" />
-                          </a>
+                      <div className="space-y-3 pt-2">
+                        {nearbyResults.map((c, i) => (
+                          <div key={i} className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-3 group hover:bg-white hover:shadow-md transition-all">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[10px] font-black text-slate-900 uppercase truncate pr-2">{c.name}</span>
+                              <a href={c.website} target="_blank" className="text-slate-400 hover:text-blue-600 transition-colors">
+                                <ExternalLink size={12} />
+                              </a>
+                            </div>
+                            <p className="text-[9px] font-bold text-slate-500 leading-relaxed line-clamp-2">{c.description}</p>
+                            <button
+                              onClick={() => registerHub(c)}
+                              className="w-full py-2 bg-white border border-slate-200 text-blue-600 rounded-xl text-[9px] font-black uppercase flex items-center justify-center gap-2 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all shadow-sm"
+                            >
+                              <Plus size={10} /> Register to Grid
+                            </button>
+                          </div>
                         ))}
                       </div>
                     )}

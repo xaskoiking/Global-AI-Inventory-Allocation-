@@ -11,7 +11,7 @@ export class GaiaAIService {
     }
   }
 
-  private async callProxy(model: string, parts: any[], config: any): Promise<string> {
+  private async callProxy(model: string, parts: any[], config: any): Promise<any> {
     const response = await fetch('/api/ai', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -19,7 +19,7 @@ export class GaiaAIService {
     });
     const data = await response.json();
     if (data.error) throw new Error(data.error);
-    return data.text;
+    return data;
   }
 
   async getRoadGeometry(start: [number, number], end: [number, number]): Promise<[number, number][]> {
@@ -66,7 +66,8 @@ export class GaiaAIService {
       });
       text = result.text;
     } else {
-      text = await this.callProxy("gemini-3-pro-preview", prompt, config);
+      const data = await this.callProxy("gemini-3-pro-preview", prompt, config);
+      text = data.text;
     }
 
     const r = JSON.parse(text || "{}");
@@ -119,7 +120,8 @@ export class GaiaAIService {
         });
         text = response.text;
       } else {
-        text = await this.callProxy("gemini-3-pro-preview", prompt, config);
+        const data = await this.callProxy("gemini-3-pro-preview", prompt, config);
+        text = data.text;
       }
 
       const results = JSON.parse(text || "[]");
@@ -145,25 +147,41 @@ export class GaiaAIService {
   }
 
   async discoverNearbyNodes(lat: number, lng: number): Promise<any[]> {
-    if (this.ai) {
-      const response = await this.ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: "Find 3 real-world food banks, community kitchens, or NGOs near this location.",
-        config: {
-          tools: [{ googleMaps: {} }],
-          toolConfig: {
-            retrievalConfig: { latLng: { latitude: lat, longitude: lng } }
-          }
-        },
-      });
-      return response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
-    } else {
-      // Proxy doesn't yet support grounding/tools easily in this implementation, 
-      // but we'll try to call it anyway to see if Vertex supports it via basic proxy.
-      const text = await this.callProxy("gemini-3-flash-preview", ["Find 3 real-world food banks, community kitchens, or NGOs near this location."], {
-        tools: [{ googleMaps: {} }]
-      });
-      return []; // Return empty for now as proxy might not handle grounding Metadata
+    const prompt = [{ text: `Find 3 real-world food banks, community kitchens, or NGOs near this location: Lat ${lat}, Lng ${lng}. Use Google Search to find their precise names, descriptions, websites, and coordinates (Lat/Lng).` }];
+    const config = {
+      tools: [{ googleSearch: {} }],
+      responseMimeType: "application/json",
+      responseSchema: {
+        type: Type.ARRAY,
+        items: {
+          type: Type.OBJECT,
+          properties: {
+            name: { type: Type.STRING },
+            lat: { type: Type.NUMBER },
+            lng: { type: Type.NUMBER },
+            description: { type: Type.STRING },
+            website: { type: Type.STRING }
+          },
+          required: ["name", "lat", "lng", "description", "website"]
+        }
+      }
+    };
+
+    try {
+      if (this.ai) {
+        const response = await this.ai.models.generateContent({
+          model: "gemini-3-flash-preview",
+          contents: prompt[0].text,
+          config
+        });
+        return JSON.parse(response.text || "[]");
+      } else {
+        const data = await this.callProxy("gemini-3-flash-preview", prompt, config);
+        return JSON.parse(data.text || "[]");
+      }
+    } catch (e) {
+      console.error("Discovery AI Error:", e);
+      return [];
     }
   }
 
@@ -200,7 +218,8 @@ export class GaiaAIService {
         });
         text = response.text;
       } else {
-        text = await this.callProxy("gemini-3-flash-preview", contents, config);
+        const data = await this.callProxy("gemini-3-flash-preview", contents, config);
+        text = data.text;
       }
       return JSON.parse(text || "{}");
     } catch (e: any) {
@@ -229,7 +248,8 @@ export class GaiaAIService {
       });
       text = response.text;
     } else {
-      text = await this.callProxy("gemini-3-flash-preview", prompt, config);
+      const data = await this.callProxy("gemini-3-flash-preview", prompt, config);
+      text = data.text;
     }
     return JSON.parse(text || "{}");
   }
@@ -259,7 +279,8 @@ export class GaiaAIService {
         });
         text = response.text;
       } else {
-        text = await this.callProxy("gemini-3-flash-preview", prompt, config);
+        const data = await this.callProxy("gemini-3-flash-preview", prompt, config);
+        text = data.text;
       }
       return JSON.parse(text || "null");
     } catch (e) {

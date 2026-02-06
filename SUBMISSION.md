@@ -9,7 +9,7 @@ Gaia 3.0 leverages the cutting-edge capabilities of the Gemini 3 API to solve th
 
 1.  **Gemini 3 Pro (Thinking Mode):** The "Logistics Dispatcher" uses Thinking Mode to reason through high-dimensional matching problems. When multiple surplus nodes exist near multiple demand nodes, Gemini 3 Pro evaluates urban logistics constraints, food perishability, and humanitarian urgency to generate a mathematically sound and ethically prioritized dispatch plan.
 2.  **Gemini 3 Flash (Vision):** The "Inventory Scanner" allows users to snap a photo of surplus food. Gemini 3 Flash instantly analyzes the image to generate an accurate manifest, estimating quantity (servings), shelf-life, and even calculating the CO2 impact of saving that specific food type.
-3.  **Gemini 3 (Tool Use/Grounding):** The "Hub Discovery" feature uses Google Maps grounding to help users find existing NGOs and food banks near their location, ensuring that Gaia integrates with established community infrastructure rather than operating in a silo.
+3.  **Gemini 3 (Tool Use/Grounding):** The "Hub Discovery" feature uses Google Maps grounding to find verified NGOs and food banks. Beyond simple search, Gaia now generates **structured geospatial data** (names, coordinates, descriptions) that allows for the **active registration** of these resources directly onto the mappings grid as live demand nodes.
 
 By combining structured JSON output with deep logical reasoning, Gaia 3.0 transforms raw data into a safe, verifiable, and efficient food recovery grid.
 
@@ -24,7 +24,8 @@ graph TD
     Thinking -->|Optimal Pairings| Logistics[Logistics Grid]
     
     App -->|Location Search| Grounding[Gemini Grounding Tool Use]
-    Grounding -->|Maps Integration| Nearby[Nearby NGOs/Feed Hubs]
+    Grounding -->|Structured Geospatial Data| Nearby[Nearby NGOs/Feed Hubs]
+    Nearby -->|Active Registration| App
     
     Logistics -->|Verified Route| Delivery[Food Rescued]
 ```
